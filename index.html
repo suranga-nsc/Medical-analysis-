@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POWER HANDS PLANTATION - Emergency & Medical Relief Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', 'Noto Sans Sinhala', sans-serif; background-color: #f0fdf4; }
+    .no-select { user-select: none; -webkit-user-select: none; }
+    #pdf-render-wrapper { position: fixed; left: -9999px; top: 0; width: 794px; background: #fff; color: #0f172a; z-index: -1; }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Header (10-Tap Trigger for Secret Admin Panel) -->
+  <header id="app-header" class="bg-gradient-to-r from-emerald-950 via-teal-900 to-emerald-800 text-white shadow-lg no-select cursor-pointer border-b-4 border-amber-400">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-center gap-3 text-center sm:text-left">
+      <div class="w-12 h-12 rounded-2xl bg-white/10 border-2 border-amber-400 flex items-center justify-center shrink-0">
+        <svg viewBox="0 0 64 64" class="w-8 h-8" fill="none">
+          <path d="M27 14H37V27H50V37H37V50H27V37H14V27H27V14Z" fill="#FBBF24"/>
+          <path d="M12 44C18 52 46 52 52 44" stroke="#34D399" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="inline-block bg-red-500/25 border border-red-300/50 text-amber-300 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full mb-0.5">
+          URGENT MEDICAL & EMERGENCY RELIEF DATA COLLECTION
+        </div>
+        <h1 class="text-lg md:text-2xl font-extrabold tracking-wide text-white leading-tight">POWER HANDS PLANTATION (PVT) LTD</h1>
+        <p class="text-emerald-200 text-xs">හදිසි මුදල් අවශ්‍යතා (වෛද්‍ය ප්‍රතිකාර) ඇති ආයෝජකයින්ගේ තොරතුරු එක්රැස් කිරීම</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Official Notice Banner -->
+  <div class="max-w-4xl w-full mx-auto px-4 pt-3">
+    <div class="bg-amber-50 border-l-4 border-amber-500 rounded-r-xl p-3 shadow-sm text-xs text-slate-800 leading-relaxed">
+      <strong class="text-red-700">විශේෂ නිවේදනයයි:</strong> හදිසි මුදල් අවශ්‍යතා (වෛද්‍ය ගැටළු) ඇති ආයෝජකයින් සඳහා ආයතනයෙන් විශේෂ ඉල්ලීමක් සිදු කිරීමට අවශ්‍ය දත්ත එක්රැස් කර ගැනීම පමණක් මෙමගින් සිදු කෙරේ. <strong>මෙය දත්ත රැස්කිරීමක් සහ ආයතනයෙන් ඉල්ලීමක් කිරීමට පමණක් වන අතර, ආයතනයේ ප්‍රතිචාරය පසුව දැනුම් දෙන බව කාරුණිකව දන්වා සිටිමු.</strong>
+    </div>
+  </div>
+
+  <!-- Public One-Screen Topic Navigation -->
+  <main id="public-view" class="max-w-4xl w-full mx-auto px-4 py-4 space-y-3.5 flex-1">
+
+    <!-- 3 Main Topic Buttons (No Long Scrolling) -->
+    <div class="grid grid-cols-3 gap-2">
+      <button type="button" onclick="switchPubTab('details')" id="pbtn-details" class="ptab-btn bg-emerald-800 text-white border-2 border-emerald-950 rounded-xl p-2.5 text-center shadow-sm">
+        <div class="text-[11px] font-extrabold text-amber-300">පියවර 01</div>
+        <div class="text-xs sm:text-sm font-bold">නම සහ Policy</div>
+      </button>
+      <button type="button" onclick="switchPubTab('reason')" id="pbtn-reason" class="ptab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-center shadow-sm">
+        <div class="text-[11px] font-extrabold text-emerald-700">පියවර 02</div>
+        <div class="text-xs sm:text-sm font-bold">හදිසි අවශ්‍යතාවය</div>
+      </button>
+      <button type="button" onclick="switchPubTab('docs')" id="pbtn-docs" class="ptab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-center shadow-sm">
+        <div class="text-[11px] font-extrabold text-emerald-700">පියවර 03</div>
+        <div class="text-xs sm:text-sm font-bold">Medical Upload</div>
+      </button>
+    </div>
+
+    <!-- Topic 01: Full Name & Multiple Policy Numbers -->
+    <section id="psec-details" class="bg-white rounded-2xl shadow-sm border border-emerald-200 p-4 space-y-3">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h2 class="text-sm font-bold text-emerald-950">01. සම්පූර්ණ නම සහ Policy අංක (Full Name & Policies) *</h2>
+        <button type="button" onclick="switchPubTab('reason')" class="bg-emerald-100 text-emerald-900 text-xs font-bold px-3 py-1 rounded-lg">ඊළඟට →</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name (සම්පූර්ණ නම) *</label>
+          <input type="text" id="fullName" placeholder="Ex: Mudiyanselage Anura Suranga" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-emerald-600" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">NIC Number (ජා.හැ.අංකය) *</label>
+          <input type="text" id="nic" placeholder="Ex: 198812345678" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-emerald-600" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Phone / WhatsApp (දුරකථන අංකය) *</label>
+          <input type="tel" id="phone" placeholder="Ex: 0771234567" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-emerald-600" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Branch (ශාඛාව) *</label>
+          <input type="text" id="branch" placeholder="Ex: Ratnapura / Colombo" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-emerald-600" />
+        </div>
+      </div>
+
+      <!-- Multiple Policy Numbers (1, 2, 3...) -->
+      <div class="pt-2 border-t">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-emerald-950">Policy අංක සහ මුදල් (Policy 1, 2, 3...) *</span>
+          <button type="button" onclick="addPolicyRow()" class="bg-emerald-800 text-white text-xs font-bold px-3 py-1 rounded-lg">+ Add Policy</button>
+        </div>
+        <div id="policies-container" class="space-y-2 max-h-[180px] overflow-y-auto pr-1"></div>
+      </div>
+    </section>
+
+    <!-- Topic 02: Emergency / Medical Reason -->
+    <section id="psec-reason" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-200 p-4 space-y-3">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h2 class="text-sm font-bold text-emerald-950">02. හදිසි මුදල් අවශ්‍යතාවයට හේතුව (Emergency Reason) *</h2>
+        <button type="button" onclick="switchPubTab('docs')" class="bg-emerald-100 text-emerald-900 text-xs font-bold px-3 py-1 rounded-lg">ඊළඟට →</button>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">හදිසි අවස්ථා වර්ගය තෝරන්න (Select Emergency Category) *</label>
+        <select id="reasonCategory" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-bold text-emerald-950"></select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">රෝගී තත්ත්වය / හදිසි අවශ්‍යතාවය පැහැදිලිව සඳහන් කරන්න *</label>
+        <textarea id="reasonDetails" rows="4" placeholder="උදා: හදිසි හෘද ශල්‍යකර්මයක් සඳහා රෝහල්ගත කර ඇත / මාසික අත්‍යවශ්‍ය පිළිකා ඖෂධ ලබා ගැනීමට..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-emerald-600"></textarea>
+      </div>
+    </section>
+
+    <!-- Topic 03: Medical Documents Upload (Auto-Converts to PDF) -->
+    <section id="psec-docs" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-200 p-4 space-y-3">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h2 class="text-sm font-bold text-emerald-950">03. වෛද්‍ය ලේඛන Upload කිරීම (Medical Documents) *</h2>
+        <span id="doc-count-badge" class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-0.5 rounded-full">0 Files</span>
+      </div>
+      <p class="text-xs text-slate-600">වෛද්‍ය වාර්තා, Clinic Cards, හෝ Diagnosis Cards ඡායාරූප (Photos) හෝ PDF ලෙස තෝරන්න. ඒවා සියල්ල <strong>තනි PDF ගොනුවක්</strong> ලෙස ස්වයංක්‍රීයව සකස් වී සුරැකේ.</p>
+      <label class="block border-2 border-dashed border-emerald-400 bg-emerald-50/60 hover:bg-emerald-100/60 rounded-2xl p-5 text-center cursor-pointer transition">
+        <div class="text-sm font-bold text-emerald-900">+ වෛද්‍ය ලේඛන තෝරන්න (Select Medical Photos / PDF)</div>
+        <div class="text-[11px] text-slate-500 mt-1">ඡායාරූප කිහිපයක් එකවර Select කළ හැක</div>
+        <input type="file" id="medicalFilesInput" multiple accept="image/*,.pdf" onchange="handleMedicalFilesSelect(this)" class="hidden" />
+      </label>
+      <div id="selected-files-list" class="text-xs text-emerald-900 font-semibold space-y-1"></div>
+    </section>
+
+    <!-- Bottom Summary & Submit + Auto WhatsApp Group Redirect -->
+    <section class="bg-gradient-to-r from-emerald-950 to-teal-900 text-white rounded-2xl p-4 shadow-md space-y-3 border border-emerald-700">
+      <div class="grid grid-cols-2 gap-3 text-center">
+        <div class="bg-white/10 rounded-xl p-2">
+          <div class="text-[11px] text-emerald-200">Policy ගණන (Policies)</div>
+          <div id="pub-policy-count" class="text-base font-extrabold">1</div>
+        </div>
+        <div class="bg-white/10 rounded-xl p-2">
+          <div class="text-[11px] text-emerald-200">මුළු ආයෝජිත මුදල (Total LKR)</div>
+          <div id="pub-total-amount" class="text-base font-extrabold text-amber-400">LKR 0.00</div>
+        </div>
+      </div>
+      <button type="button" onclick="submitEmergencyForm()" id="submitBtn" class="w-full bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold py-3 px-5 rounded-xl shadow text-sm transition">
+        Submit & Join Urgent WhatsApp Group
+      </button>
+    </section>
+  </main>
+
+  <!-- Secret Admin Panel (10-Tap Header Trigger) -->
+  <section id="admin-view" class="hidden max-w-6xl w-full mx-auto px-4 py-4 space-y-4 flex-1">
+    <div class="bg-emerald-950 text-white rounded-2xl p-4 flex flex-wrap items-center justify-between gap-2 shadow-lg">
+      <div>
+        <span class="text-[10px] bg-amber-400 text-emerald-950 font-extrabold px-2 py-0.5 rounded-full">10-TAP ADMIN PANEL</span>
+        <h2 class="text-base font-bold mt-1">හදිසි අවශ්‍යතා පාලක පුවරුව (Emergency Relief Admin)</h2>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="downloadAllInvestorsMasterPDF()" class="bg-amber-400 text-emerald-950 text-xs font-extrabold px-3 py-2 rounded-xl shadow">
+          Download All-in-One PDF
+        </button>
+        <button onclick="fetchAdminData(true)" class="bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl border border-emerald-500">
+          Sync Live Data
+        </button>
+        <button onclick="closeAdmin()" class="bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl">Exit</button>
+      </div>
+    </div>
+
+    <!-- Admin One-Screen Topic Buttons (No Long Scrolling) -->
+    <div class="grid grid-cols-3 gap-2">
+      <button onclick="switchAdminTab('summary')" id="abtn-summary" class="atab-btn bg-emerald-800 text-white border-2 border-emerald-950 rounded-xl p-2.5 text-xs font-bold">
+        01. සමස්ත සාරාංශය (Summary)
+      </button>
+      <button onclick="switchAdminTab('list')" id="abtn-list" class="atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold">
+        02. ලැයිස්තුව & Medical PDF
+      </button>
+      <button onclick="switchAdminTab('settings')" id="abtn-settings" class="atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold">
+        03. WhatsApp Link & කාණ්ඩ
+      </button>
+    </div>
+
+    <!-- Admin Tab 01: Overall Summary -->
+    <div id="asec-summary" class="space-y-3">
+      <div class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white rounded-2xl p-5 shadow">
+        <div class="text-xs font-bold text-amber-300 uppercase mb-3">හදිසි අවශ්‍යතා සමස්ත සාරාංශය (OVERALL RELIEF SUMMARY)</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+          <div class="bg-white/10 rounded-xl p-3">
+            <div class="text-xs text-emerald-200">ලියාපදිංචි පුද්ගලයින් (Total Persons)</div>
+            <div id="adm-total-persons" class="text-2xl font-extrabold mt-1">0</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3">
+            <div class="text-xs text-emerald-200">මුළු Policy ගණන (Total Policies)</div>
+            <div id="adm-total-policies" class="text-2xl font-extrabold text-emerald-300 mt-1">0</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3">
+            <div class="text-xs text-emerald-200">මුළු මුදල් එකතුව (Grand Total LKR)</div>
+            <div id="adm-grand-total" class="text-2xl font-extrabold text-amber-400 mt-1">LKR 0.00</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm">
+        <h3 class="text-xs font-bold text-emerald-950 border-b pb-2 mb-3">හදිසි කාණ්ඩ අනුව සාරාංශය (Breakdown by Medical Category)</h3>
+        <div id="adm-reason-breakdown" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+      </div>
+    </div>
+
+    <!-- Admin Tab 02: List & Separate Medical PDFs -->
+    <div id="asec-list" class="hidden bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm overflow-x-auto">
+      <h3 class="text-xs font-bold text-emerald-950 border-b pb-2 mb-3">ලියාපදිංචි වූ සියලු දෙනා (All Details & Separate Medical PDFs)</h3>
+      <table class="w-full text-left border-collapse text-xs">
+        <thead>
+          <tr class="bg-emerald-50 text-emerald-950 border-b">
+            <th class="p-2">Date / Ref</th>
+            <th class="p-2">Full Name & NIC</th>
+            <th class="p-2">Phone / Branch</th>
+            <th class="p-2">Policy Numbers</th>
+            <th class="p-2 text-right">Amount (LKR)</th>
+            <th class="p-2">Medical Reason</th>
+            <th class="p-2">Medical PDF</th>
+            <th class="p-2 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody id="adm-tbody" class="divide-y divide-slate-200"></tbody>
+      </table>
+    </div>
+
+    <!-- Admin Tab 03: WhatsApp Group Link & Reasons Add/Delete -->
+    <div id="asec-settings" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
+        <h3 class="text-xs font-bold text-emerald-950 border-b pb-2">WhatsApp Group Link (Submit කළ පසු ස්වයංක්‍රීයව යොමු වන Group එක)</h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Paste WhatsApp Group Invite Link:</label>
+          <input type="url" id="admWaGroupInput" placeholder="https://chat.whatsapp.com/..." class="w-full px-3 py-2 border rounded-xl text-xs" />
+          <button onclick="saveGlobalSettings()" class="mt-2 bg-emerald-800 text-white text-xs font-bold px-4 py-2 rounded-xl w-full">Save Group Link to All Phones</button>
+        </div>
+        <div class="pt-2 border-t">
+          <label class="block text-xs font-bold text-slate-600 mb-1">Change Admin Password:</label>
+          <div class="flex gap-2">
+            <input type="password" id="admNewPass" placeholder="New Password" class="flex-1 px-3 py-2 border rounded-xl text-xs" />
+            <button onclick="changeAdminPass()" class="bg-amber-600 text-white text-xs font-bold px-3 py-2 rounded-xl">Update</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
+        <h3 class="text-xs font-bold text-emerald-950 border-b pb-2">Add / Delete Emergency Categories (කාණ්ඩ එකතු/ඉවත් කිරීම)</h3>
+        <div class="flex gap-2">
+          <input type="text" id="newReasonInput" placeholder="නව හදිසි කාණ්ඩයක්..." class="flex-1 px-3 py-2 border rounded-xl text-xs" />
+          <button onclick="addNewReason()" class="bg-emerald-800 text-white text-xs font-bold px-3 py-2 rounded-xl">+ Add</button>
+        </div>
+        <div id="adm-reasons-list" class="space-y-1.5 max-h-[200px] overflow-y-auto"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Password Modal -->
+  <div id="pass-modal" class="hidden fixed inset-0 bg-emerald-950/75 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-3">
+      <h3 class="text-base font-bold text-emerald-950">Admin Authentication (10-Tap)</h3>
+      <input type="password" id="loginPassInput" placeholder="Enter Admin Password" class="w-full px-3 py-2 border rounded-xl text-sm" />
+      <div class="flex justify-end gap-2">
+        <button onclick="document.getElementById('pass-modal').classList.add('hidden')" class="px-3 py-1.5 text-xs font-bold text-slate-600">Cancel</button>
+        <button onclick="unlockAdmin()" class="bg-emerald-800 text-white px-4 py-1.5 rounded-xl text-xs font-bold">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pdf-render-wrapper"></div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKOoLbE6lEP_V5r71ZSiBoMcNIrQBt5u11pjppSHifMgA7-fd3-PsJt_AuBLWjOBAD/exec";
+
+    const DEFAULT_REASONS = [
+      "හදිසි ශල්‍යකර්ම / රෝහල්ගත ප්‍රතිකාර (Emergency Surgery / Hospitalization)",
+      "පිළිකා / හෘද / වකුගඩු රෝග ප්‍රතිකාර (Cancer / Heart / Kidney Treatment)",
+      "අත්‍යවශ්‍ය ඖෂධ සහ සායනික වියදම් (Urgent Medicines & Clinic Expenses)",
+      "වැඩිහිටි / ආබාධිත හදිසි වෛද්‍ය අවශ්‍යතා (Elderly / Critical Medical Care)",
+      "වෙනත් හදිසි වෛද්‍ය හෝ ජීවිතාරක්ෂක අවශ්‍යතා (Other Critical Needs)"
+    ];
+
+    let reasons = [...DEFAULT_REASONS];
+    let records = [];
+    let config = { waGroupLink: "https://chat.whatsapp.com/", password: "suranga2026" };
+    let uploadedFiles = [];
+
+    function switchPubTab(tab) {
+      ["details", "reason", "docs"].forEach(t => {
+        document.getElementById(`psec-${t}`).classList.toggle("hidden", t !== tab);
+        document.getElementById(`pbtn-${t}`).className = t === tab
+          ? "ptab-btn bg-emerald-800 text-white border-2 border-emerald-950 rounded-xl p-2.5 text-center shadow-sm"
+          : "ptab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-center shadow-sm";
+      });
+    }
+
+    function switchAdminTab(tab) {
+      ["summary", "list", "settings"].forEach(t => {
+        document.getElementById(`asec-${t}`).classList.toggle("hidden", t !== tab);
+        document.getElementById(`abtn-${t}`).className = t === tab
+          ? "atab-btn bg-emerald-800 text-white border-2 border-emerald-950 rounded-xl p-2.5 text-xs font-bold"
+          : "atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold";
+      });
+    }
+
+    async function init() {
+      renderReasonsDropdown();
+      addPolicyRow();
+
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?mode=public`);
+        const data = await res.json();
+        if (data.status === "ok") {
+          if (Array.isArray(data.reasons) && data.reasons.length) {
+            reasons = data.reasons;
+            renderReasonsDropdown();
+          }
+          if (data.waGroupLink) config.waGroupLink = data.waGroupLink;
+        }
+      } catch (e) {}
+
+      let taps = 0, timer = null;
+      document.getElementById("app-header").addEventListener("click", () => {
+        taps++;
+        clearTimeout(timer);
+        timer = setTimeout(() => { taps = 0; }, 2500);
+        if (taps >= 10) {
+          taps = 0;
+          document.getElementById("pass-modal").classList.remove("hidden");
+          document.getElementById("loginPassInput").focus();
+        }
+      });
+    }
+
+    function renderReasonsDropdown() {
+      document.getElementById("reasonCategory").innerHTML = reasons.map(r => `<option value="${r}">${r}</option>`).join("");
+    }
+
+    function addPolicyRow() {
+      const container = document.getElementById("policies-container");
+      const idx = container.children.length + 1;
+      const div = document.createElement("div");
+      div.className = "policy-row grid grid-cols-12 gap-2 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 items-center";
+      div.innerHTML = `
+        <div class="col-span-6">
+          <input type="text" class="pol-no w-full px-2.5 py-1.5 rounded-lg border text-xs bg-white" placeholder="Policy No ${idx} (Ex: AG-1025)" />
+        </div>
+        <div class="col-span-5">
+          <input type="number" oninput="updatePubTotals()" class="pol-amt w-full px-2.5 py-1.5 rounded-lg border text-xs bg-white" placeholder="Amount (LKR)" />
+        </div>
+        <div class="col-span-1 text-right">
+          ${idx > 1 ? `<button type="button" onclick="this.closest('.policy-row').remove(); updatePubTotals();" class="text-red-600 font-bold text-xs">✕</button>` : ''}
+        </div>
+      `;
+      container.appendChild(div);
+      updatePubTotals();
+    }
+
+    function updatePubTotals() {
+      const amts = Array.from(document.querySelectorAll(".pol-amt")).map(i => Number(i.value) || 0);
+      const sum = amts.reduce((a, b) => a + b, 0);
+      document.getElementById("pub-policy-count").textContent = amts.length;
+      document.getElementById("pub-total-amount").textContent = "LKR " + sum.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    }
+
+    function handleMedicalFilesSelect(input) {
+      uploadedFiles = Array.from(input.files || []);
+      document.getElementById("doc-count-badge").textContent = `${uploadedFiles.length} Files`;
+      document.getElementById("selected-files-list").innerHTML = uploadedFiles.map((f, i) => `<div>✓ ${i + 1}. ${f.name}</div>`).join("");
+    }
+
+    async function buildMergedMedicalPDF(fullName, refId) {
+      if (uploadedFiles.length === 0) return "";
+      if (uploadedFiles.length === 1 && uploadedFiles[0].type === "application/pdf") {
+        return await fileToBase64(uploadedFiles[0]);
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF("p", "mm", "a4");
+      let firstPage = true;
+
+      for (const file of uploadedFiles) {
+        if (file.type.startsWith("image/")) {
+          const imgData = await fileToDataURL(file);
+          if (!firstPage) doc.addPage();
+          firstPage = false;
+          doc.setFontSize(10);
+          doc.text(`Medical Document - ${fullName} (${refId})`, 14, 12);
+          doc.addImage(imgData, "JPEG", 14, 18, 182, 250, undefined, "FAST");
+        }
+      }
+      const out = doc.output("datauristring");
+      return out.split(",")[1];
+    }
+
+    function fileToDataURL(file) {
+      return new Promise(res => {
+        const reader = new FileReader();
+        reader.onload = e => res(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function fileToBase64(file) {
+      return new Promise(res => {
+        const reader = new FileReader();
+        reader.onload = e => res(e.target.result.split(",")[1]);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function submitEmergencyForm() {
+      const fullName = document.getElementById("fullName").value.trim();
+      const nic = document.getElementById("nic").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const branch = document.getElementById("branch").value.trim();
+      const reasonCategory = document.getElementById("reasonCategory").value;
+      const reasonDetails = document.getElementById("reasonDetails").value.trim();
+
+      if (!fullName || !nic || phone.length < 9 || !branch) {
+        switchPubTab("details");
+        alert("⚠️ පියවර 01 සම්පූර්ණ කරන්න (සම්පූර්ණ නම, NIC, දුරකථන අංකය, ශාඛාව අනිවාර්යයි).");
+        return;
+      }
+
+      const policies = [];
+      let validPol = true;
+      document.querySelectorAll(".policy-row").forEach(row => {
+        const pNo = row.querySelector(".pol-no").value.trim();
+        const pAmt = Number(row.querySelector(".pol-amt").value) || 0;
+        if (!pNo || pAmt <= 0) validPol = false;
+        policies.push({ pNo, pAmt });
+      });
+
+      if (!validPol) {
+        switchPubTab("details");
+        alert("⚠️ කරුණාකර සියලුම Policy අංක සහ මුදල් ප්‍රමාණයන් නිවැරදිව ඇතුළත් කරන්න.");
+        return;
+      }
+
+      if (!reasonDetails) {
+        switchPubTab("reason");
+        alert("⚠️ පියවර 02 හි ඔබගේ හදිසි වෛද්‍ය අවශ්‍යතාවය පැහැදිලිව සඳහන් කරන්න.");
+        return;
+      }
+
+      if (uploadedFiles.length === 0) {
+        switchPubTab("docs");
+        alert("⚠️ පියවර 03 හි ඔබගේ වෛද්‍ය ලේඛන (Medical Reports/Photos) Upload කරන්න.");
+        return;
+      }
+
+      const refId = "EMG-" + Math.floor(100000 + Math.random() * 900000);
+      const dateStr = new Date().toISOString().split("T")[0];
+      const totalAmount = policies.reduce((s, p) => s + p.pAmt, 0);
+      const policyNosStr = policies.map(p => `${p.pNo} (LKR ${p.pAmt.toLocaleString()})`).join(", ");
+
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      btn.textContent = "Converting Medical Docs to PDF & Saving...";
+
+      const medicalPdfBase64 = await buildMergedMedicalPDF(fullName, refId);
+      const appPdfBase64 = await generateApplicationPDF({ date: dateStr, id: refId, fullName, nic, phone, branch, policyNosStr, totalAmount, reasonCategory, reasonDetails });
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "submit", date: dateStr, id: refId, fullName, nic, phone, branch,
+            policyNos: policyNosStr, policyCount: policies.length, totalAmount,
+            reasonCategory, reasonDetails, appPdfBase64, medicalPdfBase64
+          })
+        });
+      } catch (e) {}
+
+      btn.disabled = false;
+      btn.textContent = "Submit & Join Urgent WhatsApp Group";
+
+      alert("✅ ඔබගේ තොරතුරු සහ වෛද්‍ය ලේඛන සාර්ථකව සුරැකිණි! දැන් හදිසි අවශ්‍යතා WhatsApp Group එක වෙත යොමු කෙරේ.");
+      if (config.waGroupLink && config.waGroupLink.startsWith("http")) {
+        window.location.href = config.waGroupLink;
+      }
+    }
+
+    async function generateApplicationPDF(rec) {
+      const wrapper = document.getElementById("pdf-render-wrapper");
+      wrapper.innerHTML = `
+        <div style="width:794px;padding:36px;background:#fff;color:#0f172a;font-family:'Inter',sans-serif;">
+          <div style="border-bottom:3px solid #065f46;padding-bottom:12px;">
+            <div style="font-size:19px;font-weight:800;color:#065f46;">POWER HANDS PLANTATION (PVT) LTD</div>
+            <div style="font-size:11px;font-weight:700;color:#b45309;">URGENT MEDICAL / EMERGENCY RELIEF REQUEST RECORD (${rec.id})</div>
+          </div>
+          <table style="width:100%;margin-top:16px;font-size:12px;border-collapse:collapse;">
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;width:30%;"><strong>Date / Ref ID:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.date} | ${rec.id}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Full Name:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.fullName}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>NIC / Phone:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.nic} | ${rec.phone}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Branch:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.branch}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Policy Numbers:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;font-weight:700;">${rec.policyNosStr}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Total Invested:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;font-weight:800;color:#065f46;">LKR ${rec.totalAmount.toLocaleString()}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Category:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.reasonCategory}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Medical Details:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.reasonDetails}</td></tr>
+          </table>
+        </div>
+      `;
+      const pdfBlob = await html2pdf().set({
+        margin: 0, image: { type: "jpeg", quality: 0.95 },
+        html2canvas: { scale: 1.5, windowWidth: 794 }, jsPDF: { unit: "px", format: [794, 1123] }
+      }).from(wrapper.firstElementChild).outputPdf("datauristring");
+      return pdfBlob.split(",")[1];
+    }
+
+    async function unlockAdmin() {
+      const pass = document.getElementById("loginPassInput").value;
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?mode=admin`);
+        const data = await res.json();
+        if (data.status === "ok") {
+          config = data.config;
+          reasons = data.config.reasons;
+          records = data.records;
+        }
+      } catch (e) {}
+      if (pass === config.password) {
+        document.getElementById("pass-modal").classList.add("hidden");
+        document.getElementById("loginPassInput").value = "";
+        document.getElementById("public-view").classList.add("hidden");
+        document.getElementById("admin-view").classList.remove("hidden");
+        document.getElementById("admWaGroupInput").value = config.waGroupLink;
+        renderAdmin();
+      } else {
+        alert("වැරදි මුරපදයකි!");
+      }
+    }
+
+    function closeAdmin() {
+      document.getElementById("admin-view").classList.add("hidden");
+      document.getElementById("public-view").classList.remove("hidden");
+    }
+
+    async function fetchAdminData(alertUser = false) {
+      const res = await fetch(`${GOOGLE_SCRIPT_URL}?mode=admin`);
+      const data = await res.json();
+      if (data.status === "ok") {
+        config = data.config;
+        reasons = data.config.reasons;
+        records = data.records;
+        renderAdmin();
+        if (alertUser) alert("දත්ත යාවත්කාලීන විය!");
+      }
+    }
+
+    async function saveGlobalSettings() {
+      config.waGroupLink = document.getElementById("admWaGroupInput").value.trim();
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "updateConfig", waGroupLink: config.waGroupLink, reasons })
+      });
+      alert("WhatsApp Group Link එක සියලුම දුරකථන සඳහා සුරැකිණි!");
+    }
+
+    async function changeAdminPass() {
+      const np = document.getElementById("admNewPass").value.trim();
+      if (np.length < 4) return alert("අක්ෂර 4කට වඩා දමන්න.");
+      config.password = np;
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "updateConfig", password: np })
+      });
+      document.getElementById("admNewPass").value = "";
+      alert("නව මුරපදය සුරැකිණි!");
+    }
+
+    async function addNewReason() {
+      const val = document.getElementById("newReasonInput").value.trim();
+      if (!val) return;
+      reasons.push(val);
+      document.getElementById("newReasonInput").value = "";
+      renderReasonsDropdown();
+      renderAdmin();
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "updateConfig", reasons })
+      });
+    }
+
+    async function deleteReason(idx) {
+      reasons.splice(idx, 1);
+      renderReasonsDropdown();
+      renderAdmin();
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "updateConfig", reasons })
+      });
+    }
+
+    async function deleteRecord(rowIndex) {
+      if (!confirm("මෙම වාර්තාව මකා දමන්නද?")) return;
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "deleteRecord", rowIndex })
+      });
+      setTimeout(() => fetchAdminData(false), 1200);
+    }
+
+    function renderAdmin() {
+      const totalPol = records.reduce((s, r) => s + (Number(r.policyCount) || 1), 0);
+      const grandAmt = records.reduce((s, r) => s + (Number(r.totalAmount) || 0), 0);
+
+      document.getElementById("adm-total-persons").textContent = records.length;
+      document.getElementById("adm-total-policies").textContent = totalPol;
+      document.getElementById("adm-grand-total").textContent = "LKR " + grandAmt.toLocaleString("en-US", { minimumFractionDigits: 2 });
+
+      document.getElementById("adm-reason-breakdown").innerHTML = reasons.map(r => {
+        const items = records.filter(rec => rec.reasonCategory === r);
+        const sum = items.reduce((s, rec) => s + (Number(rec.totalAmount) || 0), 0);
+        return `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+            <div class="text-xs font-bold text-emerald-950">${r}</div>
+            <div class="text-sm font-extrabold text-slate-900 mt-1">${items.length} Persons | LKR ${sum.toLocaleString()}</div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("adm-reasons-list").innerHTML = reasons.map((r, idx) => `
+        <div class="flex justify-between items-center bg-emerald-50 p-2 rounded-lg text-xs">
+          <span>${r}</span>
+          <button onclick="deleteReason(${idx})" class="text-red-600 font-bold px-2">✕</button>
+        </div>
+      `).join("");
+
+      document.getElementById("adm-tbody").innerHTML = records.map(r => `
+        <tr class="hover:bg-emerald-50/50">
+          <td class="p-2"><div>${r.date}</div><div class="font-bold text-emerald-900">${r.id}</div></td>
+          <td class="p-2"><div class="font-bold">${r.fullName}</div><div class="text-slate-500">${r.nic}</div></td>
+          <td class="p-2"><div>${r.phone}</div><div class="text-slate-500">${r.branch}</div></td>
+          <td class="p-2 font-semibold">${r.policyNos}</td>
+          <td class="p-2 text-right font-bold">LKR ${(Number(r.totalAmount)||0).toLocaleString()}</td>
+          <td class="p-2"><div><strong>${r.reasonCategory}</strong></div><div class="text-slate-600">${r.reasonDetails}</div></td>
+          <td class="p-2">${r.medicalPdfUrl && r.medicalPdfUrl.startsWith("http") ? `<a href="${r.medicalPdfUrl}" target="_blank" class="bg-emerald-800 text-white px-2.5 py-1 rounded font-bold inline-block">Medical PDF</a>` : "No File"}</td>
+          <td class="p-2 text-center"><button onclick="deleteRecord(${r.rowIndex})" class="bg-red-600 text-white px-2 py-1 rounded font-bold">Del</button></td>
+        </tr>
+      `).join("");
+    }
+
+    async function downloadAllInvestorsMasterPDF() {
+      const grandAmt = records.reduce((s, r) => s + (Number(r.totalAmount) || 0), 0);
+      const totalPol = records.reduce((s, r) => s + (Number(r.policyCount) || 1), 0);
+      const wrapper = document.getElementById("pdf-render-wrapper");
+      wrapper.innerHTML = `
+        <div style="width:794px;padding:30px;background:#fff;color:#0f172a;font-family:'Inter','Noto Sans Sinhala',sans-serif;">
+          <div style="border-bottom:3px solid #065f46;padding-bottom:10px;display:flex;justify-content:space-between;">
+            <div>
+              <div style="font-size:18px;font-weight:800;color:#065f46;">POWER HANDS PLANTATION (PVT) LTD</div>
+              <div style="font-size:11px;font-weight:700;color:#b45309;">URGENT MEDICAL / EMERGENCY INVESTORS MASTER LIST</div>
+            </div>
+            <div style="text-align:right;font-size:10px;">
+              <div><strong>Total Persons:</strong> ${records.length} | <strong>Policies:</strong> ${totalPol}</div>
+              <div><strong>Grand Total:</strong> LKR ${grandAmt.toLocaleString()}</div>
+            </div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:9.5px;margin-top:14px;">
+            <thead>
+              <tr style="background:#065f46;color:#fff;">
+                <th style="padding:6px;border:1px solid #065f46;">#</th>
+                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Full Name & NIC</th>
+                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Phone / Branch</th>
+                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Policy Numbers</th>
+                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Medical / Emergency Reason</th>
+                <th style="padding:6px;text-align:right;border:1px solid #065f46;">Amount (LKR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${records.map((r, i) => `
+                <tr>
+                  <td style="padding:5px;border:1px solid #cbd5e1;">${i + 1}</td>
+                  <td style="padding:5px;border:1px solid #cbd5e1;"><strong>${r.fullName}</strong><br/>NIC: ${r.nic}</td>
+                  <td style="padding:5px;border:1px solid #cbd5e1;">${r.phone}<br/>${r.branch}</td>
+                  <td style="padding:5px;border:1px solid #cbd5e1;">${r.policyNos}</td>
+                  <td style="padding:5px;border:1px solid #cbd5e1;"><strong>${r.reasonCategory}</strong><br/>${r.reasonDetails}</td>
+                  <td style="padding:5px;border:1px solid #cbd5e1;text-align:right;font-weight:700;">${(Number(r.totalAmount)||0).toLocaleString()}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+      await html2pdf().set({
+        margin: 8, filename: `Emergency_Medical_Investors_List_${new Date().toISOString().split("T")[0]}.pdf`,
+        image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, windowWidth: 794 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      }).from(wrapper.firstElementChild).save();
+    }
+
+    init();
+  </script>
+</body>
+</html>
