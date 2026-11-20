@@ -11,7 +11,6 @@
   <style>
     body { font-family: 'Inter', 'Noto Sans Sinhala', sans-serif; background-color: #f0fdf4; }
     .no-select { user-select: none; -webkit-user-select: none; }
-    #pdf-render-wrapper { position: fixed; left: -9999px; top: 0; width: 794px; background: #fff; color: #0f172a; z-index: -1; }
   </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col">
@@ -38,7 +37,7 @@
   <!-- Official Notice Banner -->
   <div class="max-w-4xl w-full mx-auto px-4 pt-3">
     <div class="bg-amber-50 border-l-4 border-amber-500 rounded-r-xl p-3 shadow-sm text-xs text-slate-800 leading-relaxed">
-      <strong class="text-red-700">විශේෂ නිවේදනයයි:</strong> හදිසි මුදල් අවශ්‍යතා (වෛද්‍ය ගැටළු) ඇති ආයෝජකයින් සඳහා ආයතනයෙන් විශේෂ ඉල්ලීමක් සිදු කිරීමට අවශ්‍ය දත්ත එක්රැස් කර ගැනීම පමණක් මෙමගින් සිදු කෙරේ. <strong>මෙය දත්ත රැස්කිරීමක් සහ ආයතනයෙන් ඉල්ලීමක් කිරීමට පමණක් වන අතර, ආයතනයේ ප්‍රතිචාරය පසුව දැනුම් දෙන බව කාරුණිකව දන්වා සිටිමු.</strong>
+      <strong class="text-red-700">විශේෂ නිවේදනයයි:</strong> හදිසි මුදල් අවශ්‍යතා (වෛද්‍ය ගැටළු) ඇති ආයෝජකයින් සඳහා ආයතනයෙන් විශේෂ ඉල්ලීමක් සිදු කිරීමට අවශ්‍ය දත්ත එක්රැස් කර ගැනීම පමණක් මෙමගින් සිදු කෙරේ. <strong>මෙය දත්ත රැස්කිරීමක් සහ ආයතනයෙන් ඉල්ලීමක් කිරීමට පමණක් වන අතර, ආයතනයේ ප්‍රතිචාරය පසුව දැනුම් දෙන බව කාරුණිකව දන්වා සිටිමු.</strong> (සැ.යු: එක් අයෙකුට පෝරමය පිරවිය හැක්කේ එක් වරක් පමණි; ගිවිසුම් කිහිපයක් ඇත්නම් "+ Add Policy" ඔබා සියල්ල එකවර ඇතුළත් කරන්න).
     </div>
   </div>
 
@@ -153,8 +152,8 @@
         <h2 class="text-base font-bold mt-1">හදිසි අවශ්‍යතා පාලක පුවරුව (Emergency Relief Admin)</h2>
       </div>
       <div class="flex flex-wrap gap-2">
-        <button onclick="downloadAllInvestorsMasterPDF()" class="bg-amber-400 text-emerald-950 text-xs font-extrabold px-3 py-2 rounded-xl shadow">
-          Download All-in-One PDF
+        <button onclick="downloadAllInvestorsMasterPDF()" id="masterPdfBtn" class="bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold px-3.5 py-2 rounded-xl shadow">
+          Download Master PDF
         </button>
         <button onclick="fetchAdminData(true)" class="bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl border border-emerald-500">
           Sync Live Data
@@ -163,13 +162,13 @@
       </div>
     </div>
 
-    <!-- Admin One-Screen Topic Buttons (No Long Scrolling) -->
+    <!-- Admin One-Screen Topic Buttons -->
     <div class="grid grid-cols-3 gap-2">
       <button onclick="switchAdminTab('summary')" id="abtn-summary" class="atab-btn bg-emerald-800 text-white border-2 border-emerald-950 rounded-xl p-2.5 text-xs font-bold">
         01. සමස්ත සාරාංශය (Summary)
       </button>
       <button onclick="switchAdminTab('list')" id="abtn-list" class="atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold">
-        02. ලැයිස්තුව & Medical PDF
+        02. ලැයිස්තුව & WhatsApp Invite
       </button>
       <button onclick="switchAdminTab('settings')" id="abtn-settings" class="atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold">
         03. WhatsApp Link & කාණ්ඩ
@@ -179,10 +178,10 @@
     <!-- Admin Tab 01: Overall Summary -->
     <div id="asec-summary" class="space-y-3">
       <div class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white rounded-2xl p-5 shadow">
-        <div class="text-xs font-bold text-amber-300 uppercase mb-3">හදිසි අවශ්‍යතා සමස්ත සාරාංශය (OVERALL RELIEF SUMMARY)</div>
+        <div class="text-xs font-bold text-amber-300 uppercase mb-3">හදිසි අවශ්‍යතා සමස්ත සාරාංශය (UNIQUE INVESTORS SUMMARY)</div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
           <div class="bg-white/10 rounded-xl p-3">
-            <div class="text-xs text-emerald-200">ලියාපදිංචි පුද්ගලයින් (Total Persons)</div>
+            <div class="text-xs text-emerald-200">සැබෑ පුද්ගලයින් ගණන (Unique Persons)</div>
             <div id="adm-total-persons" class="text-2xl font-extrabold mt-1">0</div>
           </div>
           <div class="bg-white/10 rounded-xl p-3">
@@ -201,9 +200,12 @@
       </div>
     </div>
 
-    <!-- Admin Tab 02: List & Separate Medical PDFs -->
+    <!-- Admin Tab 02: List, Medical PDFs & Direct WhatsApp Group Invite -->
     <div id="asec-list" class="hidden bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm overflow-x-auto">
-      <h3 class="text-xs font-bold text-emerald-950 border-b pb-2 mb-3">ලියාපදිංචි වූ සියලු දෙනා (All Details & Separate Medical PDFs)</h3>
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-2 mb-3">
+        <h3 class="text-xs font-bold text-emerald-950">ලියාපදිංචි වූ සියලු දෙනා (Duplicate NICs Highlighted in Red)</h3>
+        <span class="text-[11px] text-slate-500">කලින් Submit කළ අයට Group Link යැවීමට "Send Link" ඔබන්න</span>
+      </div>
       <table class="w-full text-left border-collapse text-xs">
         <thead>
           <tr class="bg-emerald-50 text-emerald-950 border-b">
@@ -213,8 +215,8 @@
             <th class="p-2">Policy Numbers</th>
             <th class="p-2 text-right">Amount (LKR)</th>
             <th class="p-2">Medical Reason</th>
-            <th class="p-2">Medical PDF</th>
-            <th class="p-2 text-center">Action</th>
+            <th class="p-2">Docs</th>
+            <th class="p-2 text-center">WhatsApp / Del</th>
           </tr>
         </thead>
         <tbody id="adm-tbody" class="divide-y divide-slate-200"></tbody>
@@ -262,7 +264,10 @@
     </div>
   </div>
 
-  <div id="pdf-render-wrapper"></div>
+  <!-- Visible PDF Preview Render Container (Ensures 100% Full Table PDF Rendering on Mobile & PC) -->
+  <div id="pdf-preview-overlay" class="hidden fixed inset-0 bg-slate-900/80 z-50 overflow-auto p-4 flex justify-center items-start">
+    <div id="pdf-render-box" class="bg-white w-[794px] p-8 shadow-2xl text-slate-900"></div>
+  </div>
 
   <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKOoLbE6lEP_V5r71ZSiBoMcNIrQBt5u11pjppSHifMgA7-fd3-PsJt_AuBLWjOBAD/exec";
@@ -277,8 +282,13 @@
 
     let reasons = [...DEFAULT_REASONS];
     let records = [];
+    let registeredNicsSet = new Set();
     let config = { waGroupLink: "https://chat.whatsapp.com/", password: "suranga2026" };
     let uploadedFiles = [];
+
+    function normalizeNic(n) {
+      return String(n || "").trim().toUpperCase().replace(/\s+/g, "");
+    }
 
     function switchPubTab(tab) {
       ["details", "reason", "docs"].forEach(t => {
@@ -302,15 +312,25 @@
       renderReasonsDropdown();
       addPolicyRow();
 
+      // Load local submitted NICs + Cloud registered NICs to block duplicates
+      const localNics = JSON.parse(localStorage.getItem("emg_submitted_nics") || "[]");
+      localNics.forEach(n => registeredNicsSet.add(normalizeNic(n)));
+
       try {
-        const res = await fetch(`${GOOGLE_SCRIPT_URL}?mode=public`);
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?mode=admin`);
         const data = await res.json();
         if (data.status === "ok") {
-          if (Array.isArray(data.reasons) && data.reasons.length) {
-            reasons = data.reasons;
-            renderReasonsDropdown();
+          if (data.config) {
+            config = data.config;
+            if (Array.isArray(data.config.reasons) && data.config.reasons.length) {
+              reasons = data.config.reasons;
+              renderReasonsDropdown();
+            }
           }
-          if (data.waGroupLink) config.waGroupLink = data.waGroupLink;
+          if (Array.isArray(data.records)) {
+            records = data.records;
+            records.forEach(r => { if (r.nic) registeredNicsSet.add(normalizeNic(r.nic)); });
+          }
         }
       } catch (e) {}
 
@@ -383,8 +403,7 @@
           doc.addImage(imgData, "JPEG", 14, 18, 182, 250, undefined, "FAST");
         }
       }
-      const out = doc.output("datauristring");
-      return out.split(",")[1];
+      return doc.output("datauristring").split(",")[1];
     }
 
     function fileToDataURL(file) {
@@ -405,15 +424,22 @@
 
     async function submitEmergencyForm() {
       const fullName = document.getElementById("fullName").value.trim();
-      const nic = document.getElementById("nic").value.trim();
+      const rawNic = document.getElementById("nic").value.trim();
+      const normNic = normalizeNic(rawNic);
       const phone = document.getElementById("phone").value.trim();
       const branch = document.getElementById("branch").value.trim();
       const reasonCategory = document.getElementById("reasonCategory").value;
       const reasonDetails = document.getElementById("reasonDetails").value.trim();
 
-      if (!fullName || !nic || phone.length < 9 || !branch) {
+      if (!fullName || !normNic || phone.length < 9 || !branch) {
         switchPubTab("details");
         alert("⚠️ පියවර 01 සම්පූර්ණ කරන්න (සම්පූර්ණ නම, NIC, දුරකථන අංකය, ශාඛාව අනිවාර්යයි).");
+        return;
+      }
+
+      // Block Duplicate Submission by NIC
+      if (registeredNicsSet.has(normNic)) {
+        alert("⚠️ මෙම NIC අංකය (" + rawNic + ") යටතේ දැනටමත් තොරතුරු ඇතුළත් කර ඇත!\nඑක් අයෙකුට පෝරමය පිරවිය හැක්කේ එක් වරක් පමණි.");
         return;
       }
 
@@ -451,21 +477,27 @@
 
       const btn = document.getElementById("submitBtn");
       btn.disabled = true;
-      btn.textContent = "Converting Medical Docs to PDF & Saving...";
+      btn.textContent = "Saving Data & Generating PDF...";
 
       const medicalPdfBase64 = await buildMergedMedicalPDF(fullName, refId);
-      const appPdfBase64 = await generateApplicationPDF({ date: dateStr, id: refId, fullName, nic, phone, branch, policyNosStr, totalAmount, reasonCategory, reasonDetails });
+      const appPdfBase64 = await generateApplicationPDF({ date: dateStr, id: refId, fullName, nic: rawNic, phone, branch, policyNosStr, totalAmount, reasonCategory, reasonDetails });
 
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
           method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            action: "submit", date: dateStr, id: refId, fullName, nic, phone, branch,
+            action: "submit", date: dateStr, id: refId, fullName, nic: rawNic, phone, branch,
             policyNos: policyNosStr, policyCount: policies.length, totalAmount,
             reasonCategory, reasonDetails, appPdfBase64, medicalPdfBase64
           })
         });
       } catch (e) {}
+
+      // Save NIC locally & in memory so user cannot submit twice
+      registeredNicsSet.add(normNic);
+      const savedLocal = JSON.parse(localStorage.getItem("emg_submitted_nics") || "[]");
+      savedLocal.push(normNic);
+      localStorage.setItem("emg_submitted_nics", JSON.stringify(savedLocal));
 
       btn.disabled = false;
       btn.textContent = "Submit & Join Urgent WhatsApp Group";
@@ -477,29 +509,33 @@
     }
 
     async function generateApplicationPDF(rec) {
-      const wrapper = document.getElementById("pdf-render-wrapper");
-      wrapper.innerHTML = `
-        <div style="width:794px;padding:36px;background:#fff;color:#0f172a;font-family:'Inter',sans-serif;">
+      const overlay = document.getElementById("pdf-preview-overlay");
+      const box = document.getElementById("pdf-render-box");
+      overlay.classList.remove("hidden");
+      box.innerHTML = `
+        <div style="font-family:'Inter','Noto Sans Sinhala',sans-serif;">
           <div style="border-bottom:3px solid #065f46;padding-bottom:12px;">
             <div style="font-size:19px;font-weight:800;color:#065f46;">POWER HANDS PLANTATION (PVT) LTD</div>
             <div style="font-size:11px;font-weight:700;color:#b45309;">URGENT MEDICAL / EMERGENCY RELIEF REQUEST RECORD (${rec.id})</div>
           </div>
           <table style="width:100%;margin-top:16px;font-size:12px;border-collapse:collapse;">
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;width:30%;"><strong>Date / Ref ID:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.date} | ${rec.id}</td></tr>
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Full Name:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.fullName}</td></tr>
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>NIC / Phone:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.nic} | ${rec.phone}</td></tr>
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Branch:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.branch}</td></tr>
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Policy Numbers:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;font-weight:700;">${rec.policyNosStr}</td></tr>
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Total Invested:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;font-weight:800;color:#065f46;">LKR ${rec.totalAmount.toLocaleString()}</td></tr>
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Category:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.reasonCategory}</td></tr>
-            <tr><td style="padding:6px;border:1px solid #cbd5e1;"><strong>Medical Details:</strong></td><td style="padding:6px;border:1px solid #cbd5e1;">${rec.reasonDetails}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;width:30%;background:#f8fafc;"><strong>Date / Ref ID:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;">${rec.date} | ${rec.id}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;background:#f8fafc;"><strong>Full Name:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;font-weight:700;">${rec.fullName}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;background:#f8fafc;"><strong>NIC / Phone:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;">${rec.nic} | ${rec.phone}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;background:#f8fafc;"><strong>Branch:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;">${rec.branch}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;background:#f8fafc;"><strong>Policy Numbers:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;font-weight:700;">${rec.policyNosStr}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;background:#f8fafc;"><strong>Total Invested:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;font-weight:800;color:#065f46;">LKR ${rec.totalAmount.toLocaleString()}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;background:#f8fafc;"><strong>Category:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;">${rec.reasonCategory}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #cbd5e1;background:#f8fafc;"><strong>Medical Details:</strong></td><td style="padding:8px;border:1px solid #cbd5e1;">${rec.reasonDetails}</td></tr>
           </table>
         </div>
       `;
+      await new Promise(r => setTimeout(r, 300));
       const pdfBlob = await html2pdf().set({
-        margin: 0, image: { type: "jpeg", quality: 0.95 },
-        html2canvas: { scale: 1.5, windowWidth: 794 }, jsPDF: { unit: "px", format: [794, 1123] }
-      }).from(wrapper.firstElementChild).outputPdf("datauristring");
+        margin: 10, image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      }).from(box).outputPdf("datauristring");
+      overlay.classList.add("hidden");
       return pdfBlob.split(",")[1];
     }
 
@@ -596,21 +632,31 @@
       setTimeout(() => fetchAdminData(false), 1200);
     }
 
+    function sendGroupInviteToInvestor(phone, name) {
+      let cleanPhone = String(phone || "").replace(/\D/g, "");
+      if (cleanPhone.startsWith("0")) cleanPhone = "94" + cleanPhone.substring(1);
+      const msg = `හිතවත් ${name},\nPOWER HANDS PLANTATION හදිසි වෛද්‍ය/මූල්‍ය අවශ්‍යතා ඇති ආයෝජකයින්ගේ WhatsApp සමූහයට සම්බන්ධ වීමට පහත ලින්ක් එක ක්ලික් කරන්න:\n${config.waGroupLink}`;
+      window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
     function renderAdmin() {
+      // Unique Persons by NIC (Prevents double-counting if someone already submitted twice)
+      const uniqueNics = new Set(records.map(r => normalizeNic(r.nic)).filter(Boolean));
       const totalPol = records.reduce((s, r) => s + (Number(r.policyCount) || 1), 0);
       const grandAmt = records.reduce((s, r) => s + (Number(r.totalAmount) || 0), 0);
 
-      document.getElementById("adm-total-persons").textContent = records.length;
+      document.getElementById("adm-total-persons").textContent = uniqueNics.size;
       document.getElementById("adm-total-policies").textContent = totalPol;
       document.getElementById("adm-grand-total").textContent = "LKR " + grandAmt.toLocaleString("en-US", { minimumFractionDigits: 2 });
 
       document.getElementById("adm-reason-breakdown").innerHTML = reasons.map(r => {
         const items = records.filter(rec => rec.reasonCategory === r);
+        const catUniqueNics = new Set(items.map(rec => normalizeNic(rec.nic)).filter(Boolean));
         const sum = items.reduce((s, rec) => s + (Number(rec.totalAmount) || 0), 0);
         return `
           <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <div class="text-xs font-bold text-emerald-950">${r}</div>
-            <div class="text-sm font-extrabold text-slate-900 mt-1">${items.length} Persons | LKR ${sum.toLocaleString()}</div>
+            <div class="text-sm font-extrabold text-slate-900 mt-1">${catUniqueNics.size} Persons | LKR ${sum.toLocaleString()}</div>
           </div>
         `;
       }).join("");
@@ -622,67 +668,107 @@
         </div>
       `).join("");
 
-      document.getElementById("adm-tbody").innerHTML = records.map(r => `
-        <tr class="hover:bg-emerald-50/50">
-          <td class="p-2"><div>${r.date}</div><div class="font-bold text-emerald-900">${r.id}</div></td>
-          <td class="p-2"><div class="font-bold">${r.fullName}</div><div class="text-slate-500">${r.nic}</div></td>
-          <td class="p-2"><div>${r.phone}</div><div class="text-slate-500">${r.branch}</div></td>
-          <td class="p-2 font-semibold">${r.policyNos}</td>
-          <td class="p-2 text-right font-bold">LKR ${(Number(r.totalAmount)||0).toLocaleString()}</td>
-          <td class="p-2"><div><strong>${r.reasonCategory}</strong></div><div class="text-slate-600">${r.reasonDetails}</div></td>
-          <td class="p-2">${r.medicalPdfUrl && r.medicalPdfUrl.startsWith("http") ? `<a href="${r.medicalPdfUrl}" target="_blank" class="bg-emerald-800 text-white px-2.5 py-1 rounded font-bold inline-block">Medical PDF</a>` : "No File"}</td>
-          <td class="p-2 text-center"><button onclick="deleteRecord(${r.rowIndex})" class="bg-red-600 text-white px-2 py-1 rounded font-bold">Del</button></td>
-        </tr>
-      `).join("");
+      // Detect duplicate NIC occurrences for Admin awareness
+      const nicCounts = {};
+      records.forEach(r => { const n = normalizeNic(r.nic); nicCounts[n] = (nicCounts[n] || 0) + 1; });
+
+      document.getElementById("adm-tbody").innerHTML = records.map(r => {
+        const isDup = nicCounts[normalizeNic(r.nic)] > 1;
+        return `
+          <tr class="${isDup ? 'bg-red-50' : 'hover:bg-emerald-50/50'}">
+            <td class="p-2"><div>${r.date}</div><div class="font-bold text-emerald-900">${r.id}</div></td>
+            <td class="p-2">
+              <div class="font-bold">${r.fullName}</div>
+              <div class="text-slate-600">${r.nic} ${isDup ? '<span class="bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">DUPLICATE</span>' : ''}</div>
+            </td>
+            <td class="p-2"><div>${r.phone}</div><div class="text-slate-500">${r.branch}</div></td>
+            <td class="p-2 font-semibold">${r.policyNos}</td>
+            <td class="p-2 text-right font-bold">LKR ${(Number(r.totalAmount)||0).toLocaleString()}</td>
+            <td class="p-2"><div><strong>${r.reasonCategory}</strong></div><div class="text-slate-600">${r.reasonDetails}</div></td>
+            <td class="p-2">${r.medicalPdfUrl && r.medicalPdfUrl.startsWith("http") ? `<a href="${r.medicalPdfUrl}" target="_blank" class="bg-emerald-800 text-white px-2 py-1 rounded font-bold inline-block">Med PDF</a>` : "No File"}</td>
+            <td class="p-2 text-center space-y-1">
+              <button onclick="sendGroupInviteToInvestor('${r.phone}', '${r.fullName.replace(/'/g, "")}')" class="bg-green-600 text-white px-2 py-1 rounded font-bold block w-full">Send Link</button>
+              <button onclick="deleteRecord(${r.rowIndex})" class="bg-red-600 text-white px-2 py-1 rounded font-bold block w-full">Del</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
     }
 
+    // Fixed & Complete A4 Master PDF Generator (Visible Overlay Render prevents blank/cut PDFs)
     async function downloadAllInvestorsMasterPDF() {
+      if (records.length === 0) return alert("බාගත කිරීමට දත්ත නොමැත!");
+      const btn = document.getElementById("masterPdfBtn");
+      btn.disabled = true;
+      btn.textContent = "Generating Full PDF...";
+
+      const uniqueNics = new Set(records.map(r => normalizeNic(r.nic)).filter(Boolean));
       const grandAmt = records.reduce((s, r) => s + (Number(r.totalAmount) || 0), 0);
       const totalPol = records.reduce((s, r) => s + (Number(r.policyCount) || 1), 0);
-      const wrapper = document.getElementById("pdf-render-wrapper");
-      wrapper.innerHTML = `
-        <div style="width:794px;padding:30px;background:#fff;color:#0f172a;font-family:'Inter','Noto Sans Sinhala',sans-serif;">
-          <div style="border-bottom:3px solid #065f46;padding-bottom:10px;display:flex;justify-content:space-between;">
+
+      const overlay = document.getElementById("pdf-preview-overlay");
+      const box = document.getElementById("pdf-render-box");
+      overlay.classList.remove("hidden");
+
+      box.innerHTML = `
+        <div style="font-family:'Inter','Noto Sans Sinhala',sans-serif;color:#0f172a;">
+          <div style="border-bottom:3px solid #065f46;padding-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
             <div>
               <div style="font-size:18px;font-weight:800;color:#065f46;">POWER HANDS PLANTATION (PVT) LTD</div>
-              <div style="font-size:11px;font-weight:700;color:#b45309;">URGENT MEDICAL / EMERGENCY INVESTORS MASTER LIST</div>
+              <div style="font-size:11px;font-weight:700;color:#b45309;">URGENT MEDICAL / EMERGENCY RELIEF INVESTORS MASTER REPORT</div>
             </div>
-            <div style="text-align:right;font-size:10px;">
-              <div><strong>Total Persons:</strong> ${records.length} | <strong>Policies:</strong> ${totalPol}</div>
-              <div><strong>Grand Total:</strong> LKR ${grandAmt.toLocaleString()}</div>
+            <div style="text-align:right;font-size:10px;line-height:1.5;">
+              <div><strong>Date:</strong> ${new Date().toLocaleDateString()}</div>
+              <div><strong>Unique Persons:</strong> ${uniqueNics.size} | <strong>Total Policies:</strong> ${totalPol}</div>
+              <div style="font-weight:800;color:#065f46;"><strong>Grand Total:</strong> LKR ${grandAmt.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
             </div>
           </div>
-          <table style="width:100%;border-collapse:collapse;font-size:9.5px;margin-top:14px;">
+
+          <table style="width:100%;border-collapse:collapse;font-size:10px;margin-top:14px;">
             <thead>
-              <tr style="background:#065f46;color:#fff;">
-                <th style="padding:6px;border:1px solid #065f46;">#</th>
-                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Full Name & NIC</th>
-                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Phone / Branch</th>
-                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Policy Numbers</th>
-                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Medical / Emergency Reason</th>
-                <th style="padding:6px;text-align:right;border:1px solid #065f46;">Amount (LKR)</th>
+              <tr style="background:#065f46;color:#ffffff;">
+                <th style="padding:7px;border:1px solid #065f46;width:4%;">#</th>
+                <th style="padding:7px;text-align:left;border:1px solid #065f46;width:22%;">Full Name & NIC</th>
+                <th style="padding:7px;text-align:left;border:1px solid #065f46;width:14%;">Phone & Branch</th>
+                <th style="padding:7px;text-align:left;border:1px solid #065f46;width:22%;">Policy Numbers</th>
+                <th style="padding:7px;text-align:left;border:1px solid #065f46;width:24%;">Medical / Emergency Reason</th>
+                <th style="padding:7px;text-align:right;border:1px solid #065f46;width:14%;">Amount (LKR)</th>
               </tr>
             </thead>
             <tbody>
               ${records.map((r, i) => `
-                <tr>
-                  <td style="padding:5px;border:1px solid #cbd5e1;">${i + 1}</td>
-                  <td style="padding:5px;border:1px solid #cbd5e1;"><strong>${r.fullName}</strong><br/>NIC: ${r.nic}</td>
-                  <td style="padding:5px;border:1px solid #cbd5e1;">${r.phone}<br/>${r.branch}</td>
-                  <td style="padding:5px;border:1px solid #cbd5e1;">${r.policyNos}</td>
-                  <td style="padding:5px;border:1px solid #cbd5e1;"><strong>${r.reasonCategory}</strong><br/>${r.reasonDetails}</td>
-                  <td style="padding:5px;border:1px solid #cbd5e1;text-align:right;font-weight:700;">${(Number(r.totalAmount)||0).toLocaleString()}</td>
+                <tr style="page-break-inside:avoid;">
+                  <td style="padding:6px;border:1px solid #94a3b8;text-align:center;">${i + 1}</td>
+                  <td style="padding:6px;border:1px solid #94a3b8;"><strong>${r.fullName || "-"}</strong><br/><span style="color:#334155;">NIC: ${r.nic || "-"}</span></td>
+                  <td style="padding:6px;border:1px solid #94a3b8;">${r.phone || "-"}<br/><span style="color:#334155;">${r.branch || "-"}</span></td>
+                  <td style="padding:6px;border:1px solid #94a3b8;font-weight:600;">${r.policyNos || "-"}</td>
+                  <td style="padding:6px;border:1px solid #94a3b8;"><strong>${r.reasonCategory || "-"}</strong><br/><span style="color:#334155;">${r.reasonDetails || "-"}</span></td>
+                  <td style="padding:6px;border:1px solid #94a3b8;text-align:right;font-weight:700;">${(Number(r.totalAmount)||0).toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
                 </tr>
               `).join("")}
+              <tr style="background:#fef3c7;font-weight:800;">
+                <td colspan="5" style="padding:8px;border:1px solid #94a3b8;text-align:right;">GRAND TOTAL (${uniqueNics.size} Unique Investors / ${totalPol} Policies):</td>
+                <td style="padding:8px;border:1px solid #94a3b8;text-align:right;color:#065f46;">LKR ${grandAmt.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
+              </tr>
             </tbody>
           </table>
         </div>
       `;
+
+      await new Promise(r => setTimeout(r, 400));
+
       await html2pdf().set({
-        margin: 8, filename: `Emergency_Medical_Investors_List_${new Date().toISOString().split("T")[0]}.pdf`,
-        image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, windowWidth: 794 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-      }).from(wrapper.firstElementChild).save();
+        margin: [8, 6, 8, 6],
+        filename: `Emergency_Medical_Master_Report_${new Date().toISOString().split("T")[0]}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+      }).from(box).save();
+
+      overlay.classList.add("hidden");
+      btn.disabled = false;
+      btn.textContent = "Download Master PDF";
     }
 
     init();
