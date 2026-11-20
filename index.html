@@ -85,7 +85,6 @@
         </div>
       </div>
 
-      <!-- Multiple Policy Numbers (1, 2, 3...) -->
       <div class="pt-2 border-t">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-bold text-emerald-950">Policy අංක සහ මුදල් (Policy 1, 2, 3...) *</span>
@@ -111,13 +110,13 @@
       </div>
     </section>
 
-    <!-- Topic 03: Medical Documents Upload (Auto-Converts to PDF) -->
+    <!-- Topic 03: Medical Documents Upload -->
     <section id="psec-docs" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-200 p-4 space-y-3">
       <div class="flex items-center justify-between border-b pb-2">
         <h2 class="text-sm font-bold text-emerald-950">03. වෛද්‍ය ලේඛන Upload කිරීම (Medical Documents) *</h2>
         <span id="doc-count-badge" class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-0.5 rounded-full">0 Files</span>
       </div>
-      <p class="text-xs text-slate-600">වෛද්‍ය වාර්තා, Clinic Cards, හෝ Diagnosis Cards ඡායාරූප (Photos) හෝ PDF ලෙස තෝරන්න. ඒවා සියල්ල <strong>තනි PDF ගොනුවක්</strong> ලෙස ස්වයංක්‍රීයව සකස් වී සුරැකේ.</p>
+      <p class="text-xs text-slate-600">වෛද්‍ය වාර්තා, Clinic Cards, හෝ Diagnosis Cards ඡායාරූප (Photos) හෝ PDF ලෙස තෝරන්න. ඒවා සියල්ල <strong>ඔබගේ නමින් ඇති වෙනම Folder එකක තනි PDF ගොනුවක්</strong> ලෙස සුරැකේ.</p>
       <label class="block border-2 border-dashed border-emerald-400 bg-emerald-50/60 hover:bg-emerald-100/60 rounded-2xl p-5 text-center cursor-pointer transition">
         <div class="text-sm font-bold text-emerald-900">+ වෛද්‍ය ලේඛන තෝරන්න (Select Medical Photos / PDF)</div>
         <div class="text-[11px] text-slate-500 mt-1">ඡායාරූප කිහිපයක් එකවර Select කළ හැක</div>
@@ -126,7 +125,7 @@
       <div id="selected-files-list" class="text-xs text-emerald-900 font-semibold space-y-1"></div>
     </section>
 
-    <!-- Bottom Summary & Submit + Auto WhatsApp Group Redirect -->
+    <!-- Bottom Summary & Submit -->
     <section class="bg-gradient-to-r from-emerald-950 to-teal-900 text-white rounded-2xl p-4 shadow-md space-y-3 border border-emerald-700">
       <div class="grid grid-cols-2 gap-3 text-center">
         <div class="bg-white/10 rounded-xl p-2">
@@ -155,6 +154,9 @@
         <button onclick="downloadAllInvestorsMasterPDF()" id="masterPdfBtn" class="bg-amber-400 hover:bg-amber-300 text-emerald-950 text-xs font-extrabold px-3.5 py-2 rounded-xl shadow">
           Download Master PDF
         </button>
+        <button onclick="switchAdminTab('medpdfs')" class="bg-teal-600 hover:bg-teal-500 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl shadow border border-teal-400">
+          Medical PDFs (නම් වශයෙන්)
+        </button>
         <button onclick="fetchAdminData(true)" class="bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl border border-emerald-500">
           Sync Live Data
         </button>
@@ -163,15 +165,18 @@
     </div>
 
     <!-- Admin One-Screen Topic Buttons -->
-    <div class="grid grid-cols-3 gap-2">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
       <button onclick="switchAdminTab('summary')" id="abtn-summary" class="atab-btn bg-emerald-800 text-white border-2 border-emerald-950 rounded-xl p-2.5 text-xs font-bold">
-        01. සමස්ත සාරාංශය (Summary)
+        01. සමස්ත සාරාංශය
+      </button>
+      <button onclick="switchAdminTab('medpdfs')" id="abtn-medpdfs" class="atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold">
+        02. Medical PDFs (නම් අනුව)
       </button>
       <button onclick="switchAdminTab('list')" id="abtn-list" class="atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold">
-        02. ලැයිස්තුව & WhatsApp Invite
+        03. සම්පූර්ණ ලැයිස්තුව
       </button>
       <button onclick="switchAdminTab('settings')" id="abtn-settings" class="atab-btn bg-white text-emerald-950 border-2 border-emerald-200 rounded-xl p-2.5 text-xs font-bold">
-        03. WhatsApp Link & කාණ්ඩ
+        04. WhatsApp & කාණ්ඩ
       </button>
     </div>
 
@@ -200,22 +205,36 @@
       </div>
     </div>
 
-    <!-- Admin Tab 02: List, Medical PDFs & Direct WhatsApp Group Invite -->
+    <!-- Admin Tab 02: Ordered Medical PDFs by Name (Matches Master PDF Order) -->
+    <div id="asec-medpdfs" class="hidden bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-2.5">
+        <div>
+          <h3 class="text-sm font-bold text-emerald-950">Master PDF පිළිවෙළට සැකසූ වෛද්‍ය ලේඛන PDF ලැයිස්තුව</h3>
+          <p class="text-[11px] text-slate-500">අදාළ පුද්ගලයාගේ නම ඉදිරියෙන් ඇති "Open Medical PDF" එබූ සැණින් ඔහුගේ වෛද්‍ය වාර්තා PDF එක විවෘත වේ.</p>
+        </div>
+        <button onclick="downloadMedicalIndexPDF()" class="bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl">
+          Download Links Index PDF
+        </button>
+      </div>
+      <div id="adm-medpdfs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+    </div>
+
+    <!-- Admin Tab 03: Full Table List -->
     <div id="asec-list" class="hidden bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm overflow-x-auto">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-2 mb-3">
         <h3 class="text-xs font-bold text-emerald-950">ලියාපදිංචි වූ සියලු දෙනා (Duplicate NICs Highlighted in Red)</h3>
-        <span class="text-[11px] text-slate-500">කලින් Submit කළ අයට Group Link යැවීමට "Send Link" ඔබන්න</span>
+        <span class="text-[11px] text-slate-500">Group Link යැවීමට "Send Link" ඔබන්න</span>
       </div>
       <table class="w-full text-left border-collapse text-xs">
         <thead>
           <tr class="bg-emerald-50 text-emerald-950 border-b">
-            <th class="p-2">Date / Ref</th>
+            <th class="p-2"># / Date</th>
             <th class="p-2">Full Name & NIC</th>
             <th class="p-2">Phone / Branch</th>
             <th class="p-2">Policy Numbers</th>
             <th class="p-2 text-right">Amount (LKR)</th>
             <th class="p-2">Medical Reason</th>
-            <th class="p-2">Docs</th>
+            <th class="p-2">Drive Files</th>
             <th class="p-2 text-center">WhatsApp / Del</th>
           </tr>
         </thead>
@@ -223,7 +242,7 @@
       </table>
     </div>
 
-    <!-- Admin Tab 03: WhatsApp Group Link & Reasons Add/Delete -->
+    <!-- Admin Tab 04: WhatsApp Group Link & Reasons Add/Delete -->
     <div id="asec-settings" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-sm space-y-3">
         <h3 class="text-xs font-bold text-emerald-950 border-b pb-2">WhatsApp Group Link (Submit කළ පසු ස්වයංක්‍රීයව යොමු වන Group එක)</h3>
@@ -264,7 +283,7 @@
     </div>
   </div>
 
-  <!-- Visible PDF Preview Render Container (Ensures 100% Full Table PDF Rendering on Mobile & PC) -->
+  <!-- Visible PDF Preview Render Container -->
   <div id="pdf-preview-overlay" class="hidden fixed inset-0 bg-slate-900/80 z-50 overflow-auto p-4 flex justify-center items-start">
     <div id="pdf-render-box" class="bg-white w-[794px] p-8 shadow-2xl text-slate-900"></div>
   </div>
@@ -300,7 +319,7 @@
     }
 
     function switchAdminTab(tab) {
-      ["summary", "list", "settings"].forEach(t => {
+      ["summary", "medpdfs", "list", "settings"].forEach(t => {
         document.getElementById(`asec-${t}`).classList.toggle("hidden", t !== tab);
         document.getElementById(`abtn-${t}`).className = t === tab
           ? "atab-btn bg-emerald-800 text-white border-2 border-emerald-950 rounded-xl p-2.5 text-xs font-bold"
@@ -312,7 +331,6 @@
       renderReasonsDropdown();
       addPolicyRow();
 
-      // Load local submitted NICs + Cloud registered NICs to block duplicates
       const localNics = JSON.parse(localStorage.getItem("emg_submitted_nics") || "[]");
       localNics.forEach(n => registeredNicsSet.add(normalizeNic(n)));
 
@@ -437,7 +455,6 @@
         return;
       }
 
-      // Block Duplicate Submission by NIC
       if (registeredNicsSet.has(normNic)) {
         alert("⚠️ මෙම NIC අංකය (" + rawNic + ") යටතේ දැනටමත් තොරතුරු ඇතුළත් කර ඇත!\nඑක් අයෙකුට පෝරමය පිරවිය හැක්කේ එක් වරක් පමණි.");
         return;
@@ -493,7 +510,6 @@
         });
       } catch (e) {}
 
-      // Save NIC locally & in memory so user cannot submit twice
       registeredNicsSet.add(normNic);
       const savedLocal = JSON.parse(localStorage.getItem("emg_submitted_nics") || "[]");
       savedLocal.push(normNic);
@@ -640,7 +656,6 @@
     }
 
     function renderAdmin() {
-      // Unique Persons by NIC (Prevents double-counting if someone already submitted twice)
       const uniqueNics = new Set(records.map(r => normalizeNic(r.nic)).filter(Boolean));
       const totalPol = records.reduce((s, r) => s + (Number(r.policyCount) || 1), 0);
       const grandAmt = records.reduce((s, r) => s + (Number(r.totalAmount) || 0), 0);
@@ -661,6 +676,25 @@
         `;
       }).join("");
 
+      // Render Ordered Medical PDFs by Name (#1, #2, #3 matching Master PDF order)
+      document.getElementById("adm-medpdfs-grid").innerHTML = records.map((r, i) => `
+        <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="text-xs font-extrabold text-emerald-950 truncate">#${i + 1}. ${r.fullName}</div>
+            <div class="text-[11px] text-slate-600">NIC: ${r.nic} | Policy: ${r.policyNos}</div>
+            <div class="text-[10px] text-amber-800 font-semibold truncate mt-0.5">${r.reasonCategory}</div>
+          </div>
+          <div class="flex flex-col gap-1 shrink-0">
+            ${r.medicalPdfUrl && r.medicalPdfUrl.startsWith("http")
+              ? `<a href="${r.medicalPdfUrl}" target="_blank" class="bg-emerald-800 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg text-center shadow-sm">Open Medical PDF</a>`
+              : `<span class="text-[10px] text-slate-400">No PDF</span>`}
+            ${r.folderUrl && r.folderUrl.startsWith("http")
+              ? `<a href="${r.folderUrl}" target="_blank" class="bg-amber-100 hover:bg-amber-200 text-emerald-950 text-[10px] font-bold px-2.5 py-1 rounded-lg text-center">Open Folder</a>`
+              : ""}
+          </div>
+        </div>
+      `).join("");
+
       document.getElementById("adm-reasons-list").innerHTML = reasons.map((r, idx) => `
         <div class="flex justify-between items-center bg-emerald-50 p-2 rounded-lg text-xs">
           <span>${r}</span>
@@ -668,15 +702,14 @@
         </div>
       `).join("");
 
-      // Detect duplicate NIC occurrences for Admin awareness
       const nicCounts = {};
       records.forEach(r => { const n = normalizeNic(r.nic); nicCounts[n] = (nicCounts[n] || 0) + 1; });
 
-      document.getElementById("adm-tbody").innerHTML = records.map(r => {
+      document.getElementById("adm-tbody").innerHTML = records.map((r, i) => {
         const isDup = nicCounts[normalizeNic(r.nic)] > 1;
         return `
           <tr class="${isDup ? 'bg-red-50' : 'hover:bg-emerald-50/50'}">
-            <td class="p-2"><div>${r.date}</div><div class="font-bold text-emerald-900">${r.id}</div></td>
+            <td class="p-2"><div class="font-extrabold text-emerald-950">#${i + 1} (${r.id})</div><div class="text-slate-500">${r.date}</div></td>
             <td class="p-2">
               <div class="font-bold">${r.fullName}</div>
               <div class="text-slate-600">${r.nic} ${isDup ? '<span class="bg-red-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">DUPLICATE</span>' : ''}</div>
@@ -685,7 +718,10 @@
             <td class="p-2 font-semibold">${r.policyNos}</td>
             <td class="p-2 text-right font-bold">LKR ${(Number(r.totalAmount)||0).toLocaleString()}</td>
             <td class="p-2"><div><strong>${r.reasonCategory}</strong></div><div class="text-slate-600">${r.reasonDetails}</div></td>
-            <td class="p-2">${r.medicalPdfUrl && r.medicalPdfUrl.startsWith("http") ? `<a href="${r.medicalPdfUrl}" target="_blank" class="bg-emerald-800 text-white px-2 py-1 rounded font-bold inline-block">Med PDF</a>` : "No File"}</td>
+            <td class="p-2 space-y-1">
+              ${r.medicalPdfUrl && r.medicalPdfUrl.startsWith("http") ? `<a href="${r.medicalPdfUrl}" target="_blank" class="bg-emerald-800 text-white px-2 py-1 rounded font-bold block text-center">Med PDF</a>` : ""}
+              ${r.folderUrl && r.folderUrl.startsWith("http") ? `<a href="${r.folderUrl}" target="_blank" class="bg-amber-200 text-emerald-950 px-2 py-1 rounded font-bold block text-center">Folder</a>` : ""}
+            </td>
             <td class="p-2 text-center space-y-1">
               <button onclick="sendGroupInviteToInvestor('${r.phone}', '${r.fullName.replace(/'/g, "")}')" class="bg-green-600 text-white px-2 py-1 rounded font-bold block w-full">Send Link</button>
               <button onclick="deleteRecord(${r.rowIndex})" class="bg-red-600 text-white px-2 py-1 rounded font-bold block w-full">Del</button>
@@ -695,7 +731,50 @@
       }).join("");
     }
 
-    // Fixed & Complete A4 Master PDF Generator (Visible Overlay Render prevents blank/cut PDFs)
+    // Download Clickable Medical PDFs Index Document (Ordered #1, #2, #3...)
+    async function downloadMedicalIndexPDF() {
+      if (records.length === 0) return alert("දත්ත නොමැත!");
+      const overlay = document.getElementById("pdf-preview-overlay");
+      const box = document.getElementById("pdf-render-box");
+      overlay.classList.remove("hidden");
+
+      box.innerHTML = `
+        <div style="font-family:'Inter','Noto Sans Sinhala',sans-serif;color:#0f172a;">
+          <div style="border-bottom:3px solid #065f46;padding-bottom:10px;">
+            <div style="font-size:18px;font-weight:800;color:#065f46;">POWER HANDS PLANTATION (PVT) LTD</div>
+            <div style="font-size:11px;font-weight:700;color:#b45309;">MEDICAL DOCUMENTS DIRECTORY (ORDERED BY NAME & REF ID)</div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:10px;margin-top:14px;">
+            <thead>
+              <tr style="background:#065f46;color:#fff;">
+                <th style="padding:6px;border:1px solid #065f46;">#</th>
+                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Full Name & NIC</th>
+                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Policy Numbers</th>
+                <th style="padding:6px;text-align:left;border:1px solid #065f46;">Medical PDF Drive Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${records.map((r, i) => `
+                <tr>
+                  <td style="padding:6px;border:1px solid #94a3b8;text-align:center;font-weight:700;">${i + 1}</td>
+                  <td style="padding:6px;border:1px solid #94a3b8;"><strong>${r.fullName}</strong><br/>NIC: ${r.nic}</td>
+                  <td style="padding:6px;border:1px solid #94a3b8;">${r.policyNos}</td>
+                  <td style="padding:6px;border:1px solid #94a3b8;word-break:break-all;color:#065f46;">${r.medicalPdfUrl || "No PDF"}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+      await new Promise(r => setTimeout(r, 300));
+      await html2pdf().set({
+        margin: 8, filename: `Medical_PDFs_Directory_${new Date().toISOString().split("T")[0]}.pdf`,
+        image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      }).from(box).save();
+      overlay.classList.add("hidden");
+    }
+
     async function downloadAllInvestorsMasterPDF() {
       if (records.length === 0) return alert("බාගත කිරීමට දත්ත නොමැත!");
       const btn = document.getElementById("masterPdfBtn");
